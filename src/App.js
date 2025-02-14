@@ -1,4 +1,3 @@
-import "./App.css";
 import Customers from "./components/customers";
 import Movies from "./components/movies";
 import {
@@ -12,6 +11,8 @@ import Rentals from "./components/rentals";
 import React, { Component } from "react";
 import NavBar from "./components/navBar";
 import MovieForm from "./components/movieForm";
+import Login from "./components/login";
+import "./App.css";
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
           <NavBar />
           <main className="container">
             <Routes>
+              <Route path="/login" element={<Login />} />
               <Route path="/movies/:id" element={<MovieForm />} />
               <Route path="/movies" element={<Movies />} />
               <Route path="/customers" element={<Customers />} />
