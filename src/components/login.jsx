@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import Input from "./common/input";
+import React from "react";
 import Joi from "joi-browser";
+import Form from "./common/form";
 
-class Login extends Component {
+class Login extends Form {
   state = {
-    account: { username: "", password: "" },
+    data: { username: "", password: "" },
     errors: {},
   };
 
@@ -13,73 +13,18 @@ class Login extends Component {
     password: Joi.string().required().label("Password"),
   };
 
-  validate = () => {
-    const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.account, this.schema, options);
-
-    if (!error) return null;
-
-    const errors = {};
-    for (let item of error.details) errors[item.path[0]] = item.message;
-    return errors;
-  };
-
-  validateProperty = ({ name, value }) => {
-    const obj = { [name]: value };
-    const schema = { [name]: this.schema[name] };
-    const { error } = Joi.validate(obj, schema, { abortEarly: false });
-    return error ? error.details[0].message : null;
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-
-    if (errors) return;
-
+  doSubmit = () => {
     console.log("Submitted");
   };
 
-  handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
-
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account, errors });
-  };
-
   render() {
-    const { account, errors } = this.state;
     return (
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
-          <Input
-            name={"username"}
-            label={"Username"}
-            value={account.username}
-            onChange={this.handleChange}
-            error={errors.username}
-            autoFocus
-          />
-
-          <Input
-            name={"password"}
-            label={"Password"}
-            value={account.password}
-            onChange={this.handleChange}
-            error={errors.password}
-            type="password"
-          />
-
-          <button disabled={this.validate()} className="btn btn-primary">
-            Login
-          </button>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderButton("Login")}
         </form>
       </div>
     );
